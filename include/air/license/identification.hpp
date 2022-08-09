@@ -1,4 +1,4 @@
-#pragma
+#pragma once
 
 #include <json/value.h>
 
@@ -6,12 +6,12 @@ namespace air
 {
     namespace license
     {
-        class identification_strategy
+        class identification
         {
         public:
-            identification_strategy() = default;
+            identification() = default;
 
-            virtual ~identification_strategy() = default;
+            virtual ~identification() = default;
 
             virtual Json::Value info() = 0;
 
