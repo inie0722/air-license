@@ -9,12 +9,12 @@ namespace air
 {
     namespace license
     {
-        class cloud_instance_id : public identification
+        class cloud_metadata : public identification
         {
         public:
-            cloud_instance_id() = default;
+            cloud_metadata() = default;
 
-            virtual ~cloud_instance_id() = default;
+            virtual ~cloud_metadata() = default;
 
             virtual Json::Value info()
             {
