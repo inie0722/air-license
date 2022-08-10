@@ -29,6 +29,9 @@ std::cout << obfuscated_string << std::endl;
 
 // Workaround for __LINE__ not being constexpr when /ZI (Edit and Continue) is enabled in Visual Studio
 // See: https://developercommunity.visualstudio.com/t/-line-cannot-be-used-as-an-argument-for-constexpr/195665
+
+#pragma once
+
 #ifdef _MSC_VER
 	#define AY_CAT(X,Y) AY_CAT2(X,Y)
 	#define AY_CAT2(X,Y) X##Y
@@ -141,6 +144,12 @@ namespace ay
 		// Returns a pointer to the plain text string, decrypting it if
 		// necessary
 		operator char*()
+		{
+			decrypt();
+			return m_data;
+		}
+
+		operator std::string ()
 		{
 			decrypt();
 			return m_data;
