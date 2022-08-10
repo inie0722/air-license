@@ -5,6 +5,7 @@
 #include <string>
 #include <array>
 #include <stdexcept>
+#include <utility>
 
 #include <stdio.h>
 
@@ -34,20 +35,22 @@ namespace air
                 return {std::move(sign), sign_len - 1};
             }
 
-            std::string system(const std::string &cmd)
+            std::pair<std::string, int> system(const std::string &cmd)
             {
                 std::array<char, 4096> buffer;
                 std::string result;
-                std::unique_ptr<FILE, decltype(&pclose)> pipe(popen(cmd.c_str(), "r"), pclose);
+
+                FILE *pipe = popen(cmd .c_str(), "r");
                 if (!pipe)
                 {
                     throw std::runtime_error("popen() failed!");
                 }
-                while (fgets(buffer.data(), buffer.size(), pipe.get()) != nullptr)
+                while (fgets(buffer.data(), buffer.size(), pipe) != nullptr)
                 {
                     result += buffer.data();
                 }
-                return result;
+
+                return {result, pclose(pipe)};
             }
         }
 
