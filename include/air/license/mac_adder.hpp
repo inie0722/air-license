@@ -44,7 +44,14 @@ namespace air
 
             virtual bool validate(const Json::Value &arg)
             {
-                return arg == this->info();
+                auto info = this->info();
+                for (auto &member : arg.getMemberNames())
+                {
+                    if (arg[member] != info[member])
+                        return false;
+                }
+
+                return true;
             }
         };
     }
