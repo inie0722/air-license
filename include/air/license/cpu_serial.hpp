@@ -2,7 +2,6 @@
 
 #include "air/license/identification.hpp"
 #include "air/license/tool.hpp"
-#include "obfuscate.h"
 
 #include <boost/algorithm/string.hpp>
 
@@ -21,7 +20,7 @@ namespace air
             {
                 Json::Value ret;
 
-                auto res = tool::system(AY_OBFUSCATE("cpuid | grep 'processor serial number = ' | awk '{print $5}' 2>/dev/null"));
+                auto res = tool::system({ENCRYPT_STRING("cpuid | grep 'processor serial number = ' | awk '{print $5}' 2>/dev/null")});
 
                 if (res.second == 0)
                 {
