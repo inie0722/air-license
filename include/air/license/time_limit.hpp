@@ -24,7 +24,7 @@ namespace air
             {
                 std::stringstream ss;
                 auto tm = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
-                ss << std::put_time(std::localtime(&tm), "%F");
+                ss << std::put_time(std::localtime(&tm), "%Y-%m-%d");
 
                 return ss.str();
             }
@@ -36,12 +36,23 @@ namespace air
 
             virtual bool validate(const Json::Value &arg)
             {
-                std::tm tm;
-                std::stringstream ss(arg["end"].asString());
-                ss >> std::get_time(&tm, "%F");
-                auto tp = std::chrono::system_clock::from_time_t(std::mktime(&tm));
-
-                return tp <= std::chrono::system_clock::now();
+                using namespace std::chrono_literals;
+                auto now = std::chrono::system_clock::now();
+                std::chrono::time_point<std::chrono::system_clock> begin;
+                std::chrono::time_point<std::chrono::system_clock> end;
+                {
+                    std::tm tm = {};
+                    std::stringstream ss(arg["begin"].asString());
+                    ss >> std::get_time(&tm, "%Y-%m-%d");
+                    begin = std::chrono::system_clock::from_time_t(std::mktime(&tm));
+                }
+                {
+                    std::tm tm = {};
+                    std::stringstream ss(arg["end"].asString());
+                    ss >> std::get_time(&tm, "%Y-%m-%d");
+                    end = std::chrono::system_clock::from_time_t(std::mktime(&tm));
+                }
+                return now >= begin and now <= end;
             }
         };
     }

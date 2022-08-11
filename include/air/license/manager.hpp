@@ -123,7 +123,21 @@ namespace air
             {
                 std::string signature = arg["signature"].asString();
                 arg.removeMember("signature");
-                return validate_signature(signature, arg.toStyledString());
+                if (!validate_signature(signature, arg.toStyledString()))
+                {
+
+                    return false;
+                }
+                else
+                {
+                    for (auto &strategy : arg.getMemberNames())
+                    {
+                        if (!identification_[strategy]->validate(arg[strategy]))
+                            return false;
+                    }
+
+                    return true;
+                }
             }
         };
     }
