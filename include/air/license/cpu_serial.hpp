@@ -20,21 +20,19 @@ namespace air
             {
                 Json::Value ret;
 
-                auto res = tool::system({ENCRYPT_STRING("cpuid | grep 'processor serial number = ' | awk '{print $5}' 2>/dev/null")});
+                auto res = tool::system({ENCRYPT_STRING("cpuid | grep 'processor serial number = ' | awk '{print $5}' 2>/dev/null | awk '{if($0!=\"\") print}'")});
 
                 if (res.second == 0)
                 {
                     std::vector<std::string> strs;
                     boost::split(strs, res.first, boost::is_any_of("\n"));
+                    strs.pop_back();
 
                     int i = 0;
                     for (auto &str : strs)
                     {
-                        if (str.length() > 0)
-                        {
-                            ret[i] = str;
-                            ++i;
-                        }
+                        ret[i] = str;
+                        ++i;
                     }
                 }
 

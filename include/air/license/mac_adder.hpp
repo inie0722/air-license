@@ -20,21 +20,17 @@ namespace air
             {
                 Json::Value ret;
 
-                auto res = tool::system({ENCRYPT_STRING("ip addr show eth0 | grep 'link/ether' | awk '{print $2}' 2>/dev/null")});
+                auto res = tool::system({ENCRYPT_STRING("ip addr show | grep -B 1 'link/ether' | awk '{print $2}' 2>/dev/null | awk '{if($0!=\"\") print}'")});
 
                 if (res.second == 0)
                 {
                     std::vector<std::string> strs;
                     boost::split(strs, res.first, boost::is_any_of("\n"));
 
-                    int i = 0;
-                    for (auto &str : strs)
+                    for (size_t i = 0; i < strs.size() / 2; i++)
                     {
-                        if (str.length() > 0)
-                        {
-                            ret[i] = str;
-                            ++i;
-                        }
+                        strs[i * 2].pop_back();
+                        ret[strs[i * 2]] = strs[i * 2 + 1];
                     }
                 }
 

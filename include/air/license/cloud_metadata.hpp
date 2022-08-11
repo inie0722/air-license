@@ -20,22 +20,12 @@ namespace air
             {
                 Json::Value ret;
 
-                auto res = tool::system({ENCRYPT_STRING("curl --connect-timeout 1 http://metadata.tencentyun.com/latest/meta-data/instance-id 2>/dev/null")});
+                auto res = tool::system({ENCRYPT_STRING("curl --connect-timeout 1 http://metadata.tencentyun.com/latest/meta-data/instance-id 2>/dev/null | awk '{if($0!=\"\") print}'")});
 
                 if (res.second == 0)
                 {
-                    std::vector<std::string> strs;
-                    boost::split(strs, res.first, boost::is_any_of("\n"));
-
-                    int i = 0;
-                    for (auto &str : strs)
-                    {
-                        if (str.length() > 0)
-                        {
-                            ret[i] = "tencent." + str;
-                            ++i;
-                        }
-                    }
+                    res.first.pop_back();
+                    ret["tencent"] = res.first;
                 }
 
                 return ret;
