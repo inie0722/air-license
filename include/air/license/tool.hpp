@@ -87,7 +87,7 @@ namespace air
 
             std::pair<std::string, int> system(const std::string &cmd)
             {
-                std::array<char, 4096> buffer;
+                std::array<char, 512> buffer;
                 std::string result;
 
                 FILE *pipe = popen(cmd.c_str(), "r");
