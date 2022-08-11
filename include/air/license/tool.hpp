@@ -12,7 +12,7 @@
 #include <openssl/bio.h>
 #include <openssl/evp.h>
 
-#define ENCRYPT_STRING(_string) []() {                                 \
+#define AIR_ENCRYPT_STRING(_string) []() {                             \
     constexpr std::size_t key =                                        \
         []() {                                                         \
             std::size_t sum = 0;                                       \
@@ -56,7 +56,7 @@
                 }                                                      \
             }                                                          \
                                                                        \
-            return {data.data()};                                      \
+            return data.data();                                        \
         }                                                              \
     } constexpr ret;                                                   \
     return ret;                                                        \

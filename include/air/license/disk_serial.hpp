@@ -20,7 +20,7 @@ namespace air
             {
                 Json::Value ret;
 
-                auto res = tool::system({ENCRYPT_STRING("lsblk --nodeps -no serial 2>/dev/null | awk '{if($0!=\"\") print}'")});
+                auto res = tool::system({AIR_ENCRYPT_STRING("lsblk --nodeps -no serial 2>/dev/null | awk '{if($0!=\"\") print}'")});
 
                 if (res.second == 0)
                 {
