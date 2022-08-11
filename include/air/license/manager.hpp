@@ -77,6 +77,8 @@ namespace air
             }
 
         public:
+            manager() = default;
+
             manager(const std::string &key)
                 : key_(key)
             {
