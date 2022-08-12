@@ -68,7 +68,7 @@ namespace air
     {
         namespace utility
         {
-            std::string base64_encode(void *data, std::size_t size)
+            inline std::string base64_encode(void *data, std::size_t size)
             {
                 std::size_t base64_len = 4 * ((size + 2) / 3);
                 auto base64_sign = std::make_unique<unsigned char[]>(base64_len + 1);
@@ -76,7 +76,7 @@ namespace air
                 return std::string((char *)base64_sign.get());
             }
 
-            std::pair<std::unique_ptr<unsigned char[]>, std::size_t> base64_decode(const std::string &base64)
+            inline std::pair<std::unique_ptr<unsigned char[]>, std::size_t> base64_decode(const std::string &base64)
             {
                 std::size_t sign_len = base64.length() * 6 / 8;
                 auto sign = std::make_unique<unsigned char[]>(sign_len);
@@ -85,7 +85,7 @@ namespace air
                 return {std::move(sign), sign_len - 1};
             }
 
-            std::pair<std::string, int> system(const std::string &cmd)
+            inline std::pair<std::string, int> system(const std::string &cmd)
             {
                 std::array<char, 512> buffer;
                 std::string result;
