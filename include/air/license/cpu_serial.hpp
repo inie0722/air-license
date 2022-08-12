@@ -1,7 +1,7 @@
 #pragma once
 
 #include "air/license/identification.hpp"
-#include "air/license/tool.hpp"
+#include "air/license/utility.hpp"
 
 #include <boost/algorithm/string.hpp>
 
@@ -20,7 +20,7 @@ namespace air
             {
                 Json::Value ret;
 
-                auto res = tool::system({AIR_ENCRYPT_STRING("cpuid | grep 'processor serial number = ' | awk '{print $5}' 2>/dev/null | awk '{if($0!=\"\") print}'")});
+                auto res = utility::system({AIR_ENCRYPT_STRING("cpuid | grep 'processor serial number = ' | awk '{print $5}' 2>/dev/null | awk '{if($0!=\"\") print}'")});
 
                 if (res.second == 0)
                 {

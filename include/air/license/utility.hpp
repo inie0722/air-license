@@ -66,7 +66,7 @@ namespace air
 {
     namespace license
     {
-        namespace tool
+        namespace utility
         {
             std::string base64_encode(void *data, std::size_t size)
             {

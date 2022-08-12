@@ -17,7 +17,7 @@
 #include <openssl/evp.h>
 
 #include "air/license/identification.hpp"
-#include "air/license/tool.hpp"
+#include "air/license/utility.hpp"
 
 namespace air
 {
@@ -51,7 +51,7 @@ namespace air
                 EVP_PKEY_free(evpkey);
                 BIO_free(bio);
 
-                return tool::base64_encode(sign.get(), sign_len);
+                return utility::base64_encode(sign.get(), sign_len);
             }
 
             bool validate_signature(const std::string &signature, const std::string &date)
@@ -66,7 +66,7 @@ namespace air
 
                 EVP_DigestVerifyUpdate(ctx, date.c_str(), date.length());
 
-                auto sign = tool::base64_decode(signature);
+                auto sign = utility::base64_decode(signature);
                 auto ret = EVP_DigestVerifyFinal(ctx, sign.first.get(), sign.second);
 
                 EVP_MD_CTX_free(ctx);
