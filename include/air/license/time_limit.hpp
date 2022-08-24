@@ -50,7 +50,7 @@ namespace air
                 std::uint32_t txTm_f; // 32 bits. Transmit time-stamp fraction of a second.
             };
 
-            std::optional<std::chrono::time_point<std::chrono::system_clock>> get_ntp_time(const std::string &host, std::size_t max_size, std::chrono::milliseconds timeout)
+            std::optional<std::chrono::time_point<std::chrono::system_clock, std::chrono::nanoseconds>> get_ntp_time(const std::string &host, std::size_t max_size, std::chrono::milliseconds timeout)
             {
                 using namespace boost::asio;
 
@@ -114,7 +114,7 @@ namespace air
                 }
                 else
                 {
-                    std::chrono::time_point<std::chrono::system_clock> ret;
+                    std::chrono::time_point<std::chrono::system_clock, std::chrono::nanoseconds> ret;
                     ret += std::chrono::seconds(ntohl(packet.rxTm_s) - 2208988800ull) + std::chrono::nanoseconds(ntohl(packet.rxTm_f));
 
                     return ret;
@@ -147,8 +147,8 @@ namespace air
                 if (now == std::nullopt)
                     return false;
 
-                std::chrono::time_point<std::chrono::system_clock> begin;
-                std::chrono::time_point<std::chrono::system_clock> end;
+                std::chrono::time_point<std::chrono::system_clock, std::chrono::nanoseconds> begin;
+                std::chrono::time_point<std::chrono::system_clock, std::chrono::nanoseconds> end;
                 {
                     std::tm tm = {};
                     std::stringstream ss(arg["begin"].asString());
