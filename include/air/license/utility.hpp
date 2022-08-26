@@ -7,7 +7,7 @@
 #include <stdexcept>
 #include <utility>
 
-#include <stdio.h>
+#include <boost/process.hpp>
 
 #include <openssl/bio.h>
 #include <openssl/evp.h>
@@ -85,22 +85,22 @@ namespace air
                 return {std::move(sign), sign_len - 1};
             }
 
-            inline std::pair<std::string, int> system(const std::string &cmd)
+            inline std::pair<std::string, int> system(const std::string &command)
             {
-                std::array<char, 512> buffer;
-                std::string result;
+                namespace bp = boost::process;
 
-                FILE *pipe = popen(cmd.c_str(), "r");
-                if (!pipe)
-                {
-                    throw std::runtime_error("popen() failed!");
-                }
-                while (fgets(buffer.data(), buffer.size(), pipe) != nullptr)
-                {
-                    result += buffer.data();
-                }
+                bp::ipstream pipe_stream;
+#if defined __linux__ || defined __APPLE__
+                auto code = bp::system(bp::search_path("sh"), std::vector<std::string>{"-c", command}, bp::std_out > pipe_stream, bp::std_err > bp::null);
+#elif defined _WIN32
+                auto code = bp::system(bp::search_path("powershell"), std::vector<std::string>{"-c", command}, bp::std_out > pipe_stream, bp::std_err > bp::null);
+#endif
+                std::string line;
+                std::string ret;
+                while (pipe_stream && std::getline(pipe_stream, line) && !line.empty())
+                    ret += line + "\n";
 
-                return {result, pclose(pipe)};
+                return {ret, code};
             }
         }
     }

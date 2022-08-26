@@ -19,8 +19,8 @@ namespace air
             virtual Json::Value info()
             {
                 Json::Value ret;
-
-                auto res = utility::system({AIR_ENCRYPT_STRING("cpuid | grep 'processor serial number = ' | awk '{print $5}' 2>/dev/null | awk '{if($0!=\"\") print}'")});
+#if defined __linux__ || defined __APPLE__
+                auto res = utility::system({AIR_ENCRYPT_STRING("cpuid | grep 'processor serial number = '")});
 
                 if (res.second == 0)
                 {
@@ -29,13 +29,44 @@ namespace air
                     strs.pop_back();
 
                     int i = 0;
+                    std::string tmp;
                     for (auto &str : strs)
                     {
-                        ret[i] = str;
-                        ++i;
+                        //丢弃重复的
+                        auto id = str.substr(29);
+
+                        if (tmp != id)
+                        {
+                            tmp = id;
+                            ret[i] = id;
+                            ++i;
+                        }
                     }
                 }
+#elif defined _WIN32
+                auto res = utility::system({AIR_ENCRYPT_STRING("wmic cpu get processorid")});
+                if (res.second == 0)
+                {
+                    std::vector<std::string> strs;
+                    boost::split(strs, res.first, boost::is_any_of("\r\r\n"));
+                    strs.erase(strs.begin());
 
+                    int i = 0;
+                    std::string tmp;
+                    for (auto &str : strs)
+                    {
+                        //丢弃重复的
+                        auto id = str;
+
+                        if (str.length() > 0 and tmp != id)
+                        {
+                            tmp = id;
+                            ret[i] = id;
+                            ++i;
+                        }
+                    }
+                }
+#endif
                 return ret;
             }
 
