@@ -72,15 +72,15 @@ namespace air
             {
                 std::size_t base64_len = 4 * ((size + 2) / 3);
                 auto base64_sign = std::make_unique<unsigned char[]>(base64_len + 1);
-                EVP_EncodeBlock(base64_sign.get(), (unsigned char *)data, size);
-                return std::string((char *)base64_sign.get());
+                EVP_EncodeBlock(base64_sign.get(), static_cast<unsigned char *>(data), size);
+                return std::string(reinterpret_cast<char *>(base64_sign.get()));
             }
 
             inline std::pair<std::unique_ptr<unsigned char[]>, std::size_t> base64_decode(const std::string &base64)
             {
                 std::size_t sign_len = base64.length() * 6 / 8;
                 auto sign = std::make_unique<unsigned char[]>(sign_len);
-                EVP_DecodeBlock(sign.get(), (unsigned char *)base64.c_str(), base64.length());
+                EVP_DecodeBlock(sign.get(), reinterpret_cast<const unsigned char *>(base64.c_str()), base64.length());
 
                 return {std::move(sign), sign_len - 1};
             }

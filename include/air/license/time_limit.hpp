@@ -23,7 +23,7 @@ namespace air
 
             virtual ~time_limit() = default;
 
-            virtual Json::Value info()
+            virtual Json::Value info() override
             {
                 std::stringstream ss;
                 auto tm = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
@@ -32,12 +32,12 @@ namespace air
                 return ss.str();
             }
 
-            virtual Json::Value generate(const Json::Value &arg)
+            virtual Json::Value generate(const Json::Value &arg) override
             {
                 return arg;
             }
 
-            virtual bool validate(const Json::Value &arg)
+            virtual bool validate(const Json::Value &arg) override
             {
                 using namespace std::chrono_literals;
                 auto now = std::chrono::system_clock::now();

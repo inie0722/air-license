@@ -16,7 +16,7 @@ namespace air
 
             virtual ~mac_adder() = default;
 
-            virtual Json::Value info()
+            virtual Json::Value info() override
             {
                 Json::Value ret;
 #if defined __linux__ || defined __APPLE__
@@ -64,12 +64,12 @@ namespace air
                 return ret;
             }
 
-            virtual Json::Value generate(const Json::Value &arg)
+            virtual Json::Value generate(const Json::Value &arg) override
             {
                 return arg;
             }
 
-            virtual bool validate(const Json::Value &arg)
+            virtual bool validate(const Json::Value &arg) override
             {
                 auto info = this->info();
                 for (auto &member : arg.getMemberNames())
